@@ -243,6 +243,28 @@ svg.chart{width:100%;height:210px;display:block}
 .modal-ft{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
 .modal-ft .btn{flex:1}
 @media (max-width:720px){.modal-ft .btn{width:auto;flex:1}}
+.bk-text{width:100%;min-height:230px;box-sizing:border-box;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px;line-height:1.55;background:#fff;color:var(--ink);resize:vertical;word-break:break-all}
+.txt-link{border:0;background:transparent;color:var(--brand);font-size:12px;cursor:pointer;padding:6px 0;text-decoration:underline}
+.field-addtag{flex:0 0 auto;white-space:nowrap}
+/* 标签管理 */
+.tag-grp{margin:12px 0 4px}
+.tag-grp-hd{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.tag-grp-hd .tag-add{margin-left:auto}
+.tag-inline{display:flex;gap:6px;align-items:center}
+.tag-inline input{flex:1;min-width:0}
+.tag-inline .mini{flex:0 0 auto;white-space:nowrap}
+.tag-chips{display:flex;flex-wrap:wrap;gap:6px}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:16px;padding:5px 10px;font-size:12px;background:#F7F8FB;color:var(--ink)}
+.tag-chip.builtin{color:var(--muted);background:#F1F3F8}
+.tag-chip .tag-x{border:0;background:transparent;color:#E5484D;font-size:15px;line-height:1;cursor:pointer;padding:0 0 0 2px}
+.tag-chip .tag-scope{border:0;border-radius:10px;padding:2px 6px;font-size:10px;line-height:1.2;cursor:pointer;background:#eaf0ff;color:var(--brand)}
+.tag-chip .tag-scope[data-scope="income"]{background:#e7f6ee;color:#218358}
+.tag-chip .tag-scope[data-scope="both"]{background:#f1f3f8;color:var(--muted)}
+.tag-chip .tag-scope-view{cursor:default}
+.tag-empty{font-size:12px;color:var(--muted)}
+.tag-addrow{display:flex;gap:8px;margin-top:16px}
+.tag-addrow input{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
+.tag-addrow select{flex:0 0 auto;padding:8px 6px;border:1px solid var(--line);border-radius:8px;font-size:12px;background:#fff;color:var(--ink)}
 
 /* 记账紧凑快捷盘 */
 .fin-mini{padding:10px 11px}
@@ -252,9 +274,11 @@ svg.chart{width:100%;height:210px;display:block}
 .fm-seg button.on{background:#fff;color:var(--brand)}
 .fm-amt{font-size:22px;font-weight:800;margin-left:auto;font-variant-numeric:tabular-nums}
 .fm-amt small{font-size:13px;color:var(--muted)}
-.fm-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:9px 0;padding-bottom:2px}
+.fm-chips{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0;padding-bottom:2px}
 .fm-chips::-webkit-scrollbar{display:none}
 .fm-chips .chip{flex:0 0 auto;border:1px solid var(--line);background:#F7F8FB;border-radius:16px;padding:5px 11px;font-size:12px;color:var(--ink);cursor:pointer}
+.chip-add{border-style:dashed!important;color:var(--brand)!important;background:transparent!important}
+.chips .chip-add{padding:7px 13px;border-radius:20px;font-size:13px}
 .fm-chips .chip.on{background:#eaf0ff;border-color:var(--brand);color:var(--brand);font-weight:700}
 .fm-pad{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:4px}
 .fm-pad button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px;font-size:16px;font-weight:700;cursor:pointer;color:var(--ink)}
@@ -311,7 +335,7 @@ svg.chart{width:100%;height:210px;display:block}
 // 加字段 = 往对应模块 fields 追加一项；加图表 = 往 charts 追加一项。无需改动 app.js/db.js/charts.js。
 window.APP_CONFIG = {
   appName: "人生不过三万天",
-  version: 13,
+  version: 15,
 
   // 每个模块的字段定义（type: date|number|select|text|textarea）
   modules: [
@@ -321,19 +345,18 @@ window.APP_CONFIG = {
       fields: [
         { key: "date", label: "日期", type: "date", required: true },
         { key: "type", label: "类型", type: "select", options: ["支出", "收入"], required: true },
-        { key: "category", label: "分类", type: "text", list: "finance_categories", required: true },
+        { key: "category", label: "分类", type: "text", list: "finance_categories", tagKey: "finance_categories", required: true },
         { key: "amount", label: "金额", type: "number", step: "0.01", required: true },
-        { key: "account", label: "账户", type: "text", list: "finance_accounts" },
         { key: "note", label: "备注", type: "text" }
       ],
-      columns: ["date", "type", "category", "amount", "account", "note"]
+      columns: ["date", "type", "category", "amount", "note"]
     },
     {
       key: "study", label: "学习", icon: "study", kind: "record",
       fields: [
         { key: "date", label: "日期", type: "date", required: true },
         { key: "duration", label: "时长(分钟)", type: "number", required: true },
-        { key: "method", label: "方式", type: "text", list: "study_methods", required: true },
+        { key: "method", label: "方式", type: "text", list: "study_methods", tagKey: "study_methods", required: true },
         { key: "output", label: "笔记/产出", type: "textarea" }
       ],
       columns: ["date", "duration", "method", "output"]
@@ -342,7 +365,7 @@ window.APP_CONFIG = {
       key: "sport", label: "运动", icon: "sport", kind: "record",
       fields: [
         { key: "date", label: "日期", type: "date", required: true },
-        { key: "sportType", label: "运动类型", type: "text", list: "sport_types", required: true },
+        { key: "sportType", label: "运动类型", type: "text", list: "sport_types", tagKey: "sport_types", required: true },
         { key: "duration", label: "时长(分钟)", type: "number", required: true },
         { key: "distance", label: "距离(km)", type: "number", step: "0.01" }
       ],
@@ -352,13 +375,13 @@ window.APP_CONFIG = {
       key: "goods", label: "物资仓", icon: "goods", kind: "record",
       // 二级分类：大类 category → 细类 sub（选项随大类联动，见 goodsTaxonomy）
       fields: [
-        { key: "category", label: "大类", type: "select", options: ["公共", "个人穿搭", "美妆护肤"], required: true },
-        { key: "sub", label: "细类", type: "select", options: [], required: true, cascade: "category" },
+        { key: "category", label: "大类", type: "select", options: ["公共", "个人穿搭", "美妆护肤"], tagKey: "goods_categories", required: true },
+        { key: "sub", label: "细类", type: "select", options: [], tagKey: "goods_sub", cascade: "category", required: true },
         { key: "name", label: "物品名称", type: "text", required: true },
         { key: "qty", label: "数量", type: "number", required: true },
         { key: "inDate", label: "入库日期", type: "date", required: true },
         { key: "expiry", label: "有效日期", type: "date", required: true },
-        { key: "image", label: "示例图（拍照，必填）", type: "image", capture: "environment" },
+        { key: "image", label: "示例图（拍照，可后补）", type: "image", capture: "environment" },
         { key: "location", label: "存放位置", type: "text", required: true },
         { key: "threshold", label: "预警阈值（留空=按细类规则）", type: "number" }
       ],
@@ -404,18 +427,25 @@ window.APP_CONFIG = {
 
   // 可选项清单：输入框用 datalist 给出建议，允许自由新增（分类可扩展）
   lists: {
-    finance_categories: ["餐饮", "交通", "购物", "居住", "娱乐", "医疗", "教育", "人情", "工资", "理财", "服饰", "通讯", "美容美发", "长辈", "其他"],
-    finance_accounts: ["微信", "支付宝", "银行卡", "现金", "信用卡", "其他"],
+    finance_categories: ["餐饮", "交通", "购物", "居住", "娱乐", "医疗", "教育", "人情", "工资", "理财", "服饰", "通讯", "美容美发", "长辈", "奖金", "报销", "兼职", "利息", "其他"],
     study_methods: ["看书", "视频", "做题", "听课", "实操", "复习", "其他"],
     sport_types: ["跑步", "健走", "骑行", "游泳", "力量", "球类", "瑜伽", "跳绳", "健身操", "其他"],
     goods_categories: ["公共", "个人穿搭", "美妆护肤"]
   },
 
+  // 记账分类用途：收入专属 / 支出与收入通用；其余默认支出。
+  // 自定义分类可用标签管理里的用途按钮改成 income / expense / both。
+  financeCategoryScope: {
+    income: ["工资", "奖金", "报销", "兼职", "利息"],
+    both: ["理财", "人情", "其他"]
+  },
+
   // 物资仓二级分类：大类 → 细类（表单级联、补货规则、分组都基于此）
+  // 公共 = 家庭公用的物品（吃喝、清洁、纸品、工具等），非某一个人专属。
   goodsTaxonomy: {
-    "公共": ["食品", "日用品", "清洁", "工具", "药品", "其他"],
-    "个人穿搭": ["春夏装", "秋冬装", "箱包鞋", "装饰", "其他"],
-    "美妆护肤": ["彩妆", "护肤", "其他"]
+    "公共": ["食品", "日用品", "纸品", "清洁", "厨房用品", "工具五金", "药品保健", "家居收纳", "宠物用品", "节日礼品", "其他"],
+    "个人穿搭": ["春夏装", "秋冬装", "内衣袜", "箱包鞋", "装饰", "其他"],
+    "美妆护肤": ["护肤", "彩妆", "洗发沐浴", "口腔护理", "其他"]
   },
 
   // 补货规则：按「大类|细类」设 { th: 预警阈值, qty: 建议补货量 }。
@@ -423,9 +453,9 @@ window.APP_CONFIG = {
   // qty：点「补货」生成的请购数量，0 = 回退为「有效阈值 + 1」（兼容旧数据）。
   // 用户可在物资仓「补货规则」面板修改，改动存 localStorage，不覆盖此默认。
   restockRules: {
-    "公共|食品": { th: 1, qty: 2 }, "公共|日用品": { th: 1, qty: 2 }, "公共|清洁": { th: 1, qty: 2 }, "公共|工具": { th: 0, qty: 1 }, "公共|药品": { th: 2, qty: 2 }, "公共|其他": { th: 0, qty: 1 },
-    "个人穿搭|春夏装": { th: 0, qty: 1 }, "个人穿搭|秋冬装": { th: 0, qty: 1 }, "个人穿搭|箱包鞋": { th: 0, qty: 1 }, "个人穿搭|装饰": { th: 0, qty: 1 }, "个人穿搭|其他": { th: 0, qty: 1 },
-    "美妆护肤|彩妆": { th: 1, qty: 1 }, "美妆护肤|护肤": { th: 1, qty: 1 }, "美妆护肤|其他": { th: 0, qty: 1 }
+    "公共|食品": { th: 1, qty: 2 }, "公共|日用品": { th: 1, qty: 2 }, "公共|纸品": { th: 1, qty: 2 }, "公共|清洁": { th: 1, qty: 2 }, "公共|厨房用品": { th: 0, qty: 1 }, "公共|工具五金": { th: 0, qty: 1 }, "公共|药品保健": { th: 2, qty: 2 }, "公共|家居收纳": { th: 0, qty: 1 }, "公共|宠物用品": { th: 1, qty: 2 }, "公共|节日礼品": { th: 0, qty: 1 }, "公共|其他": { th: 0, qty: 1 }, "公共|工具": { th: 0, qty: 1 }, "公共|药品": { th: 2, qty: 2 },
+    "个人穿搭|春夏装": { th: 0, qty: 1 }, "个人穿搭|秋冬装": { th: 0, qty: 1 }, "个人穿搭|内衣袜": { th: 1, qty: 2 }, "个人穿搭|箱包鞋": { th: 0, qty: 1 }, "个人穿搭|装饰": { th: 0, qty: 1 }, "个人穿搭|其他": { th: 0, qty: 1 },
+    "美妆护肤|护肤": { th: 1, qty: 1 }, "美妆护肤|彩妆": { th: 1, qty: 1 }, "美妆护肤|洗发沐浴": { th: 1, qty: 2 }, "美妆护肤|口腔护理": { th: 1, qty: 2 }, "美妆护肤|其他": { th: 0, qty: 1 }
   },
 
   // 请购审批/库存评估策略（家庭端使用；个人端先预留接口）
@@ -465,9 +495,9 @@ window.APP_CONFIG = {
     { id: "expiry", label: "临期/过期", icon: "alert", jump: "goods", unit: "项", color: "#E5484D" }
   ],
 
-  // 快捷录入配置（最小人工录入）：记账常用分类/默认账户、运动一键预设、物资模板
+  // 快捷录入配置（最小人工录入）：记账常用分类、运动一键预设、物资模板
   quickEntry: {
-    finance: { common: ["餐饮", "交通", "购物", "居住", "娱乐", "服饰", "通讯", "医疗", "其他"], account: "微信" },
+    finance: { common: ["餐饮", "交通", "购物", "居住", "娱乐", "服饰", "通讯", "医疗", "其他"] },
     sport: { presets: [ { label: "跑步 30分", type: "跑步", minutes: 30 }, { label: "健走 20分", type: "健走", minutes: 20 }, { label: "骑行 40分", type: "骑行", minutes: 40 }, { label: "力量 25分", type: "力量", minutes: 25 } ] },
     goods: { templates: [
       { name: "大米", category: "公共", sub: "食品", threshold: "" },
@@ -979,9 +1009,11 @@ window.SEED = {
   function fieldInput(f, val) {
     const v = val == null ? "" : val;
     if (f.type === "select") {
+      const tk = f.tagKey && !f.cascade ? f.tagKey : null;
+      const opts = tk ? optsWithOther(allOf(tk)) : (f.options || []);
       return `<select name="${f.key}" ${f.required ? "required" : ""}>
         <option value="">请选择</option>
-        ${(f.options || []).map(o => `<option value="${esc(o)}" ${o === v ? "selected" : ""}>${esc(o)}</option>`).join("")}
+        ${opts.map(o => `<option value="${esc(o)}" ${o === v ? "selected" : ""}>${o === "其他" && tk ? "＋ 其他（自定义）" : esc(o)}</option>`).join("")}
       </select>`;
     }
     if (f.type === "textarea") return `<textarea name="${f.key}" ${f.required ? "required" : ""}>${esc(v)}</textarea>`;
@@ -995,40 +1027,56 @@ window.SEED = {
     const type = f.type === "number" ? "number" : f.type === "date" ? "date" : "text";
     const step = f.step ? ` step="${f.step}"` : "";
     const req = f.required ? " required" : "";
-    return `<input name="${f.key}" type="${type}"${step}${req}${listAttr} value="${esc(v)}" ${f.type === "number" ? 'inputmode="decimal"' : ""}>`;
+    const input = `<input name="${f.key}" type="${type}"${step}${req}${listAttr} value="${esc(v)}" ${f.type === "number" ? 'inputmode="decimal"' : ""}>`;
+    // 带 tagKey 的文本字段：旁边放一个可见的「+ 新标签」按钮，点击弹窗输入（兼容手机 WebView）
+    if (f.tagKey && f.type === "text") {
+      return `<div class="tag-inline">${input}<button type="button" class="mini field-addtag" data-addtag="${esc(f.tagKey)}" data-target="${esc(f.key)}">＋ 新标签</button></div>`;
+    }
+    return input;
+  }
+  function catDatalistOptions(type) {
+    return financeCatsFor(type).concat(["其他"]).map(o => `<option value="${esc(o)}">`).join("");
+  }
+  function updateCatDatalist() {
+    const dl = $("#dl_finance_categories"); if (!dl) return;
+    const ts = $("#rec-form select[name='type']");
+    dl.innerHTML = catDatalistOptions(ts ? ts.value : "支出");
   }
   function datalists() {
-    return Object.keys(C.lists).map(key =>
-      `<datalist id="dl_${key}">${C.lists[key].map(o => `<option value="${esc(o)}">`).join("")}</datalist>`).join("");
+    return Object.keys(C.lists).map(key => {
+      const opts = key === "finance_categories" ? catDatalistOptions("支出") : allOf(key).map(o => `<option value="${esc(o)}">`).join("");
+      return `<datalist id="dl_${key}">${opts}</datalist>`;
+    }).join("");
   }
 
   // ---------- 记录页 ----------
   // ---------- 快捷录入（最小人工录入；纯逻辑走 window.Quick）----------
-  let qf = { amt: "0", dot: false, type: "支出", category: null, account: null };
+  let qf = { amt: "0", dot: false, type: "支出", category: null };
   let timers = { study: { sec: 0, run: null }, sport: { sec: 0, run: null } };
   const chipHtml = (arr, sel) => arr.map(x => { const v = (typeof x === "string") ? x : x.label; return `<span class="chip${v === sel ? " on" : ""}" data-v="${esc(v)}">${esc(v)}</span>`; }).join("");
+  const addChipHtml = () => `<span class="chip chip-add" id="q-addtag" data-v="__add__">＋ 新标签</span>`;
   function clockStr(s) { const m = Math.floor(s / 60), ss = s % 60; return (m < 10 ? "0" : "") + m + ":" + (ss < 10 ? "0" : "") + ss; }
 
   function quickHtml(m) {
     const Q = (C.quickEntry || {});
     if (m.key === "finance") {
-      const cats = (Q.finance && Q.finance.common) || [];
-      const accs = (C.lists && C.lists.finance_accounts) || [];
+      const cats = financeCatsFor(qf.type);
       return `<div class="card qcard fin-mini">
         <div class="fm-top"><div class="fm-seg" id="q-type">${["支出", "收入"].map(t => `<button type="button" data-v="${t}" class="${t === qf.type ? "on" : ""}">${t}</button>`).join("")}</div><div class="fm-amt"><small>¥</small><span id="q-amt">${esc(qf.amt)}</span></div></div>
-        <div class="fm-chips" id="q-cat">${chipHtml(cats, qf.category)}</div>
+        <p class="qlab" style="margin-top:8px">分类 · ${qf.type === "收入" ? "仅收入类" : "仅支出类"}（切换收支自动筛选）</p>
+        <div class="fm-chips" id="q-cat">${chipHtml(cats, qf.category)}${addChipHtml()}</div>
         <div class="fm-pad" id="q-pad">${["1", "2", "3", "del", "4", "5", "6", ".", "7", "8", "9", "0"].map(k => `<button type="button" class="${(k === "." || k === "del") ? "fn" : ""}" data-k="${k}">${k === "del" ? "⌫" : k}</button>`).join("")}</div>
         <button type="button" class="fm-save" id="q-save">记一笔</button>
-        <div class="fm-def"><span class="fm-meta" id="fm-meta">今天 · ${esc(qf.account || "微信")}</span><button type="button" class="fm-rep" id="q-repeat">重复上一笔</button></div>
-        <input type="date" id="q-date" value="${todayStr()}" hidden><select id="q-account" hidden>${accs.map(a => `<option${a === qf.account ? " selected" : ""}>${esc(a)}</option>`).join("")}</select>
+        <div class="fm-def"><span class="fm-meta" id="fm-meta">今天</span><button type="button" class="fm-rep" id="q-repeat">重复上一笔</button></div>
+        <input type="date" id="q-date" value="${todayStr()}" hidden>
       </div>`;
     }
     if (m.key === "study" || m.key === "sport") {
       const t = timers[m.key];
-      const chips = m.key === "study" ? (C.lists.study_methods || []) : (C.lists.sport_types || []);
+      const chips = allOf(m.key === "study" ? "study_methods" : "sport_types");
       let extra = "";
       if (m.key === "sport" && Q.sport && Q.sport.presets) {
-        extra = `<p class="qlab">一键预设</p><div class="chips" id="q-preset">${Q.sport.presets.map(p => `<span class="chip" data-type="${esc(p.type)}" data-min="${p.minutes}">${esc(p.label)}</span>`).join("")}</div>`;
+        extra = `<p class="qlab">一键预设</p><div class="chips" id="q-preset">${Q.sport.presets.map(p => `<span class="chip" data-type="${esc(p.type)}" data-min="${p.minutes}">${esc(p.label)}</span>`).join("")}</div><p class="rule-tip" style="margin-top:6px">点预设即自动记一笔，无需再点「结束并记录」，以免重复记账。</p>`;
       }
       const noteField = m.key === "study" ? `<p class="qlab">笔记/产出（可选）</p><textarea id="q-note" placeholder="学了什么 / 产出"></textarea>` : "";
       return `<div class="card qcard">
@@ -1037,7 +1085,7 @@ window.SEED = {
         <div class="timer"><div class="big" id="t-clock">${clockStr(t.sec)}</div><div class="st" id="t-st">${t.run ? "计时中…" : "未开始"}</div></div>
         ${extra}
         <p class="qlab">${m.key === "study" ? "方式" : "类型"}</p>
-        <div class="chips" id="q-method">${chipHtml(chips, null)}</div>
+        <div class="chips" id="q-method">${chipHtml(chips.filter(x => x !== "其他"), null)}${addChipHtml()}</div>
         ${noteField}
         <div class="qrow2"><button type="button" class="btn ghost" id="t-toggle">${t.run ? "暂停" : "开始"}</button><button type="button" class="btn" id="t-save">结束并记录</button></div>
       </div>`;
@@ -1047,6 +1095,7 @@ window.SEED = {
       return `<div class="card qcard">
         <p class="qlab">模板一键入库（预填名称/类别/阈值，补位置/保质期即可）</p>
         <div class="chips" id="q-tpl">${tpl.map((x, i) => `<span class="chip" data-i="${i}">${esc(x.name)}</span>`).join("")}</div>
+        <div class="rule-tip" style="margin-top:10px">「公共」= 家庭公用的物品（食品、纸品、清洁、工具、药品等）；个人穿搭 / 美妆护肤为个人专属。新增记录默认大类为「公共」，选好大类后细类会自动带出预设选项，也可选「＋ 其他」自己加。</div>
         <p class="qlab" style="margin-top:10px">下方列表用 −1 / +1 直接出入库，「补货」一键生成请购</p>
       </div>`;
     }
@@ -1068,17 +1117,40 @@ window.SEED = {
   function bindFinanceQuick(m, rows) {
     const last = rows.length ? rows[rows.length - 1] : null;
     if (qf.category == null) qf.category = (last && last.category) || ((C.quickEntry.finance || {}).common || [])[0] || "";
-    if (qf.account == null) qf.account = (last && last.account) || (C.quickEntry.finance || {}).account || "微信";
-    const accSel0 = $("#q-account"); if (accSel0) accSel0.value = qf.account;
-    const meta0 = $("#fm-meta"); if (meta0) meta0.textContent = "今天 · " + qf.account;
-    $("#q-type").querySelectorAll("button").forEach(b => b.onclick = () => { qf.type = b.dataset.v; $$("#q-type button").forEach(x => x.classList.toggle("on", x === b)); });
-    $("#q-cat").querySelectorAll(".chip").forEach(c => c.onclick = () => { qf.category = c.dataset.v; $$("#q-cat .chip").forEach(x => x.classList.toggle("on", x === c)); });
+    if (!qf.category || !tagScopeMatch(qf.category, qf.type)) qf.category = defaultCatFor(qf.type);
+    const meta0 = $("#fm-meta"); if (meta0) meta0.textContent = "今天";
+    const syncCat = () => {
+      $("#q-cat").innerHTML = chipHtml(financeCatsFor(qf.type), qf.category) + addChipHtml();
+      const lab = document.querySelector("#main .qcard.fin-mini .qlab");
+      if (lab) lab.textContent = "分类 · " + (qf.type === "收入" ? "仅收入类" : "仅支出类") + "（切换收支自动筛选）";
+      bindCatChips();
+    };
+    const bindCatChips = () => {
+      $("#q-cat").querySelectorAll(".chip").forEach(c => c.onclick = () => {
+        if (c.dataset.v === "__add__") {
+          openNewTag("finance_categories", name => {
+            setTagScope(name, qf.type === "收入" ? "income" : "expense");
+            qf.category = name; render();
+            toast(tagSaveHint("已新增" + (qf.type === "收入" ? "收入" : "支出") + "分类「" + name + "」并选用"));
+          });
+          return;
+        }
+        qf.category = c.dataset.v; $$("#q-cat .chip").forEach(x => x.classList.toggle("on", x === c));
+      });
+    };
+    $("#q-type").querySelectorAll("button").forEach(b => b.onclick = () => {
+      qf.type = b.dataset.v;
+      $$("#q-type button").forEach(x => x.classList.toggle("on", x === b));
+      if (!qf.category || !tagScopeMatch(qf.category, qf.type)) qf.category = defaultCatFor(qf.type);
+      syncCat();
+    });
+    bindCatChips();
     $("#q-pad").querySelectorAll("button").forEach(b => b.onclick = () => { const r = window.Quick.padPress({ amt: qf.amt, dot: qf.dot }, b.dataset.k); qf.amt = r.amt; qf.dot = r.dot; $("#q-amt").textContent = qf.amt; });
     $("#q-save").onclick = async () => {
       const v = parseFloat(qf.amt);
       if (!v || v <= 0) { toast("请输入金额"); return; }
       if (!qf.category) { toast("请选择分类"); return; }
-      const obj = { date: ($("#q-date").value || todayStr()), type: qf.type, category: qf.category, amount: round2(v), account: $("#q-account").value || qf.account, note: "" };
+      const obj = { date: ($("#q-date").value || todayStr()), type: qf.type, category: qf.category, amount: round2(v), note: "" };
       await window.DB.add("finance", obj);
       if (TODO_TRIGGERS.includes(obj.category)) await autoTodo(m, obj);
       qf.amt = "0"; qf.dot = false;
@@ -1088,23 +1160,41 @@ window.SEED = {
     $("#q-repeat").onclick = () => {
       if (!last) { toast("还没有上一笔"); return; }
       qf.amt = String(last.amount != null ? last.amount : "0"); qf.dot = String(last.amount).indexOf(".") >= 0;
-      qf.type = last.type || "支出"; qf.category = last.category || qf.category; qf.account = last.account || qf.account;
+      qf.type = last.type || "支出"; qf.category = last.category || qf.category;
+      if (!qf.category || !tagScopeMatch(qf.category, qf.type)) qf.category = defaultCatFor(qf.type);
       $("#q-amt").textContent = qf.amt;
       $$("#q-type button").forEach(x => x.classList.toggle("on", x.dataset.v === qf.type));
-      $$("#q-cat .chip").forEach(x => x.classList.toggle("on", x.dataset.v === qf.category));
-      const accSel = $("#q-account"); if (accSel) accSel.value = qf.account;
+      syncCat();
       toast("已带入上一笔");
     };
   }
   function bindTimerQuick(m) {
     const t = timers[m.key];
+    // 恢复刚新增标签的选中态
+    if (window.__quickSel && window.__quickSel.key === m.key) {
+      const nm = window.__quickSel.name;
+      $$("#q-method .chip").forEach(x => x.classList.toggle("on", x.dataset.v === nm));
+      window.__quickSel = null;
+    }
     const clockEl = $("#t-clock"), stEl = $("#t-st"), tg = $("#t-toggle");
     if (!t.run) { t.sec = 0; if (clockEl) clockEl.textContent = clockStr(0); }
     tg.onclick = () => {
       if (t.run) { clearInterval(t.run); t.run = null; tg.textContent = "开始"; stEl.textContent = "已暂停"; }
       else { stEl.textContent = "计时中…"; tg.textContent = "暂停"; t.run = setInterval(() => { t.sec++; const c = $("#t-clock"); if (c) c.textContent = clockStr(t.sec); }, 1000); }
     };
-    $("#q-method").querySelectorAll(".chip").forEach(c => c.onclick = () => { $$("#q-method .chip").forEach(x => x.classList.remove("on")); c.classList.add("on"); });
+    $("#q-method").querySelectorAll(".chip").forEach(c => c.onclick = () => {
+      if (c.dataset.v === "__add__") {
+        const tagKey = m.key === "study" ? "study_methods" : "sport_types";
+        openNewTag(tagKey, name => {
+          const arr = allOf(tagKey); const idx = arr.indexOf(name);
+          qf[m.key === "study" ? "category" : "sportType"] = name;
+          window.__quickSel = { key: m.key, name: name };
+          render(); toast("已新增「" + name + "」并选用");
+        });
+        return;
+      }
+      $$("#q-method .chip").forEach(x => x.classList.remove("on")); c.classList.add("on");
+    });
     $("#t-save").onclick = async () => {
       if (t.run) { clearInterval(t.run); t.run = null; }
       const mins = window.Quick.minutesFromSec(t.sec);
@@ -1134,7 +1224,7 @@ window.SEED = {
         subEl.innerHTML = `<option value="">请选择</option>` + opts.map(o => `<option value="${esc(o)}"${o === x.sub ? " selected" : ""}>${esc(o)}</option>`).join("");
       }
       if (f("threshold") && x.threshold != null) f("threshold").value = x.threshold;
-      toast("已预填模板，补「示例图/存放位置/有效日期」后保存");
+      toast("已预填模板，补「存放位置/有效日期」后保存（示例图可后补）");
       const el = $("#rec-form"); if (el) el.scrollIntoView({ block: "start" });
     });
   }
@@ -1153,12 +1243,102 @@ window.SEED = {
     inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); doAdd(); } });
   }
 
-  // ---------- 物资仓：大类→细类 级联 / 补货规则 / 阈值继承·覆盖 ----------
+  // 物资仓视图状态：陈列 / 库存
   let goodsView = (C.goodsView && C.goodsView.default) || "show";
+  // ---------- 自定义标签库（内置 + 用户自定义，分层存储）----------
+  const TAGS_KEY = "gwtb_custom_tags";
+  // 内存优先：即使 App 内置浏览器禁用了 localStorage，本次会话内新增的标签也能立刻显示。
+  let tagsCache = null;
+  let tagsPersistOk = true;
+  function loadTags() {
+    if (tagsCache) return tagsCache;
+    try { tagsCache = JSON.parse(localStorage.getItem(TAGS_KEY) || "{}") || {}; } catch (e) { tagsCache = {}; }
+    return tagsCache;
+  }
+  function saveTags(map) {
+    tagsCache = map;
+    try { localStorage.setItem(TAGS_KEY, JSON.stringify(map)); tagsPersistOk = true; }
+    catch (e) { tagsPersistOk = false; }
+  }
+  function tagSaveHint(prefix) {
+    return prefix + (tagsPersistOk ? "" : "（本次会话有效；当前 App 未允许长期保存，请用备份带走标签）");
+  }
+  // 记账分类用途：income=收入专属 / expense=支出专属 / both=两边都显示
+  const SCOPE_KEY = "gwtb_finance_tag_scopes";
+  let scopeCache = null;
+  function loadScopes() {
+    if (scopeCache) return scopeCache;
+    try { scopeCache = JSON.parse(localStorage.getItem(SCOPE_KEY) || "{}") || {}; } catch (e) { scopeCache = {}; }
+    return scopeCache;
+  }
+  function saveScopes(map) {
+    scopeCache = map;
+    try { localStorage.setItem(SCOPE_KEY, JSON.stringify(map)); } catch (e) {}
+  }
+  function tagScopeOf(name) {
+    const s = loadScopes();
+    if (s[name] === "income" || s[name] === "expense" || s[name] === "both") return s[name];
+    const cfg = C.financeCategoryScope || {};
+    if ((cfg.income || []).indexOf(name) >= 0) return "income";
+    if ((cfg.both || []).indexOf(name) >= 0) return "both";
+    return "expense";
+  }
+  function setTagScope(name, scope) { const s = loadScopes(); s[name] = scope; saveScopes(s); }
+  function scopeLabel(s) { return s === "income" ? "收入" : s === "both" ? "通用" : "支出"; }
+  function tagScopeMatch(name, type) {
+    const s = tagScopeOf(name);
+    return s === "both" || (type === "收入" ? s === "income" : s === "expense");
+  }
+  function financeCatsFor(type) { return allOf("finance_categories").filter(x => x !== "其他" && tagScopeMatch(x, type)); }
+  // 默认选中：优先用途专属（收入→工资，支出→餐饮），再回退到通用类
+  function defaultCatFor(type) {
+    const list = financeCatsFor(type), want = type === "收入" ? "income" : "expense";
+    const exact = list.filter(x => tagScopeOf(x) === want);
+    return (exact[0] || list[0] || "");
+  }
+  function customOf(key) { const t = loadTags(); return Array.isArray(t[key]) ? t[key] : []; }
+  function builtinOf(key) {
+    if (key === "finance_categories") return (C.lists.finance_categories || []).slice();
+    if (key === "study_methods") return (C.lists.study_methods || []).slice();
+    if (key === "sport_types") return (C.lists.sport_types || []).slice();
+    if (key === "goods_categories") return (C.lists.goods_categories || []).slice();
+    if (key.indexOf("goods_sub|") === 0) { const b = key.slice(10); return ((C.goodsTaxonomy || {})[b] || []).slice(); }
+    return [];
+  }
+  function allOf(key) {
+    // 自定义标签排在最前：新增后立刻能在第一屏看到，不会被一长串默认标签淹没。
+    const custom = customOf(key);
+    const out = custom.slice();
+    builtinOf(key).forEach(x => { if (out.indexOf(x) < 0) out.push(x); });
+    return out;
+  }
+  function optsWithOther(arr) { const a = (arr || []).slice(); if (a.indexOf("其他") < 0) a.push("其他"); return a; }
+  function addTag(key, name) {
+    name = String(name || "").trim();
+    if (!name || name === "其他") return false;
+    if (allOf(key).indexOf(name) >= 0) return false;
+    const t = loadTags(); if (!Array.isArray(t[key])) t[key] = [];
+    t[key].push(name); saveTags(t); return true;
+  }
+  function removeTag(key, name) {
+    const t = loadTags();
+    if (Array.isArray(t[key])) { t[key] = t[key].filter(x => x !== name); saveTags(t); }
+  }
+  function resetTags(key) { const t = loadTags(); delete t[key]; saveTags(t); }
+  function tagGroups() {
+    const g = [
+      { key: "finance_categories", label: "记账 · 分类" },
+      { key: "study_methods", label: "学习 · 方式" },
+      { key: "sport_types", label: "运动 · 类型" },
+      { key: "goods_categories", label: "物资 · 大类" }
+    ];
+    allOf("goods_categories").forEach(big => g.push({ key: "goods_sub|" + big, label: big === "公共" ? "物资细类 · 公共（家庭共用）" : "物资细类 · " + big }));
+    return g;
+  }
   const RULES_KEY = "gwtb_restock_rules";
   const goodsTaxonomy = C.goodsTaxonomy || {};
-  const bigCats = Object.keys(goodsTaxonomy);
-  function subsOf(big) { return goodsTaxonomy[big] || []; }
+  function bigCats() { return allOf("goods_categories"); } // 动态取，新增大类后立即可用
+  function subsOf(big) { return allOf("goods_sub|" + big); }
   function normRule(v) {
     if (v && typeof v === "object") return { th: Number(v.th) || 0, qty: Number(v.qty) || 0 };
     return { th: Number(v) || 0, qty: 0 }; // 兼容旧版纯数字格式
@@ -1168,7 +1348,7 @@ window.SEED = {
     Object.keys(C.restockRules || {}).forEach(k => { base[k] = normRule(C.restockRules[k]); });
     try {
       const s = JSON.parse(localStorage.getItem(RULES_KEY) || "null");
-      if (s && typeof s === "object") Object.keys(s).forEach(k => { if (k in base) base[k] = normRule(s[k]); });
+      if (s && typeof s === "object") Object.keys(s).forEach(k => { base[k] = normRule(s[k]); });
     } catch (e) {}
     return base;
   }
@@ -1189,7 +1369,13 @@ window.SEED = {
   function hydrateGoods(rows) {
     return (rows || []).map(r => Object.assign({}, r, { threshold: effThreshold(r) }));
   }
-  function goodsBigColor(big) { return ((C.goodsView && C.goodsView.catColors) || {})[big] || "#86899a"; }
+  const EXTRA_CATS = ["#6E56CF", "#E5484D", "#12A594", "#F5A524", "#2C5CD8", "#D6409F", "#0E9F6E", "#C2410C"];
+  function goodsBigColor(big) {
+    const fixed = ((C.goodsView && C.goodsView.catColors) || {})[big];
+    if (fixed) return fixed;
+    let h = 0; const s = String(big || ""); for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return EXTRA_CATS[h % EXTRA_CATS.length];
+  }
 
   // 分组展开/收起状态（默认收起）
   const GROUPS_KEY = "gwtb_goods_groups";
@@ -1258,7 +1444,7 @@ window.SEED = {
   function rulesPanelHtml() {
     const r = loadRules();
     let rows = "";
-    bigCats.forEach(big => {
+    bigCats().forEach(big => {
       rows += `<div class="rule-big">${esc(big)}</div>`;
       rows += `<div class="rule-head"><span class="rule-nm">细类</span><span class="rule-in-h">预警阈值</span><span class="rule-in-h">建议补货</span></div>`;
       subsOf(big).forEach(sub => {
@@ -1300,6 +1486,94 @@ window.SEED = {
       close(); toast("已恢复默认规则"); render();
     };
   }
+  // 选「其他（自定义）」时弹出输入框，新文本存为标签并回填到控件
+  function openNewTag(key, apply) {
+    const mask = document.createElement("div");
+    mask.className = "modal-mask";
+    mask.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="新建标签" style="max-width:400px">
+      <div class="modal-hd"><h3>新建自定义标签</h3><button class="modal-x" id="nt-x" type="button" aria-label="关闭">×</button></div>
+      <div class="modal-bd"><div class="rule-tip">输入新名称，确认后会加入选项清单，以后可直接选用。不会改动任何已有记录。</div>
+        <div class="field"><label>标签名称</label><input id="nt-name" type="text" maxlength="24" placeholder="例如：宠物、通勤、冥想"></div>
+      </div>
+      <div class="modal-ft"><button class="btn" id="nt-ok" type="button">确认添加</button><button class="btn ghost" id="nt-cancel" type="button">取消</button></div>
+    </div>`;
+    document.body.appendChild(mask);
+    const close = () => mask.remove();
+    $("#nt-x").onclick = close;
+    $("#nt-cancel").onclick = close;
+    mask.onclick = e => { if (e.target === mask) close(); };
+    const nameEl = $("#nt-name");
+    const ok = () => {
+      const name = (nameEl.value || "").trim();
+      if (!name) { toast("请输入名称"); nameEl.focus(); return; }
+      if (!addTag(key, name)) { toast("该名称已存在或无效"); nameEl.select(); return; }
+      close(); apply(name);
+      if (!tagsPersistOk) toast("标签本次会话有效；App 未允许长期保存，请用备份带走");
+    };
+    $("#nt-ok").onclick = ok;
+    nameEl.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); ok(); } };
+    setTimeout(() => nameEl.focus(), 50);
+  }
+
+  // 标签管理弹窗：按模块分组，内置灰显不可删、自定义可删、每组可新增/恢复默认
+  function openTagsModal(onDone) {
+    const mask = document.createElement("div");
+    mask.className = "modal-mask";
+    mask.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="标签管理">
+      <div class="modal-hd"><h3>标签管理</h3><button class="modal-x" id="tg-x" type="button" aria-label="关闭">×</button></div>
+      <div class="modal-bd" id="tg-bd"></div>
+      <div class="modal-ft"><button class="btn" id="tg-done" type="button">完成并刷新页面</button></div>
+    </div>`;
+    document.body.appendChild(mask);
+    const refresh = () => { if (typeof onDone === "function") onDone(); };
+    const close = () => { mask.remove(); refresh(); };
+    $("#tg-x").onclick = close;
+    $("#tg-done").onclick = close;
+    mask.onclick = e => { if (e.target === mask) close(); };
+
+    const body = $("#tg-bd");
+    const render = () => {
+      body.innerHTML = tagGroups().map(g => {
+        const bi = builtinOf(g.key), cu = customOf(g.key);
+        const chips = bi.map(x => `<span class="tag-chip builtin">${esc(x)}${g.key === "finance_categories" ? `<button class="tag-scope" type="button" data-scope="${tagScopeOf(x)}" data-name="${esc(x)}" title="点击切换：支出 → 收入 → 通用">${scopeLabel(tagScopeOf(x))}</button>` : ""}</span>`).join("")
+          + cu.map(x => `<span class="tag-chip">${esc(x)}${g.key === "finance_categories" ? `<button class="tag-scope" type="button" data-scope="${tagScopeOf(x)}" data-name="${esc(x)}" title="点击切换：支出 → 收入 → 通用">${scopeLabel(tagScopeOf(x))}</button>` : ""}<button class="tag-x" type="button" data-key="${esc(g.key)}" data-name="${esc(x)}" aria-label="删除${esc(x)}">×</button></span>`).join("");
+        return `<div class="tag-grp" data-grp="${esc(g.key)}">
+          <div class="tag-grp-hd"><span>${esc(g.label)}</span><button class="mini tag-reset" type="button" data-key="${esc(g.key)}">恢复默认</button></div>
+          <div class="tag-chips">${chips || `<span class="tag-empty">（暂无自定义）</span>`}</div>
+          <div class="tag-addrow"><input type="text" maxlength="24" placeholder="新增标签名称" data-key="${esc(g.key)}">${g.key === "finance_categories" ? `<select class="tag-scope-sel" aria-label="分类用途"><option value="expense">支出</option><option value="income">收入</option><option value="both">通用</option></select>` : ""}<button class="mini tag-add" type="button" data-key="${esc(g.key)}">添加</button></div>
+        </div>`;
+      }).join("");
+      body.querySelectorAll(".tag-x").forEach(b => b.onclick = () => {
+        const k = b.dataset.key, n = b.dataset.name;
+        if (!confirm(`删除标签「${n}」？\n只从候选中移除，已用此标签的历史记录不会改变。`)) return;
+        removeTag(k, n); render(); refresh(); toast("已删除标签「" + n + "」");
+      });
+      body.querySelectorAll(".tag-add").forEach(b => b.onclick = () => {
+        const k = b.dataset.key, inp = b.parentNode.querySelector("input"), name = (inp.value || "").trim();
+        if (!name) { toast("请输入名称"); inp.focus(); return; }
+        if (!addTag(k, name)) { toast("该名称已存在或无效"); inp.select(); return; }
+        const sel = b.parentNode.querySelector(".tag-scope-sel");
+        if (k === "finance_categories" && sel) setTagScope(name, sel.value);
+        render(); refresh(); toast(tagSaveHint("已添加标签「" + name + "」"));
+      });
+      body.querySelectorAll(".tag-scope[data-name]").forEach(b => b.onclick = () => {
+        const n = b.dataset.name, order = ["expense", "income", "both"];
+        const next = order[(order.indexOf(tagScopeOf(n)) + 1) % order.length];
+        setTagScope(n, next); render(); refresh(); toast("分类「" + n + "」用途已设为「" + scopeLabel(next) + "」");
+      });
+      body.querySelectorAll(".tag-addrow input").forEach(inp => inp.onkeydown = e => {
+        if (e.key === "Enter") { e.preventDefault(); const b = inp.parentNode.querySelector("button"); if (b) b.click(); }
+      });
+      body.querySelectorAll(".tag-reset").forEach(b => b.onclick = () => {
+        if (!confirm("恢复该组为系统默认标签？你新增的标签（含改过的用途）将被清除，已有记录不变。")) return;
+        resetTags(b.dataset.key);
+        if (b.dataset.key === "finance_categories") saveScopes({}); // 内置/自定义分类用途一并恢复默认
+        render(); refresh(); toast("已恢复默认");
+      });
+    };
+    render();
+  }
+
   function bindGoodsView(m, rows) {
     $$(".gseg button").forEach(b => b.onclick = () => { goodsView = b.dataset.gv; render(); });
     $$("#main .gd-ghead").forEach(h => h.onclick = () => { const b = h.dataset.big; setOpen(b, !isOpen(b)); render(); });
@@ -1313,7 +1587,9 @@ window.SEED = {
     else if (m.pendingFilter) rows = rows.filter(r => r[m.statusField] !== "已完成");
     const rowsH = m.key === "goods" ? hydrateGoods(rows) : rows; // 物资：阈值规范化用于显示/预警
     const sf = m.statusField ? m.fields.find(f => f.key === m.statusField) : null;
-    const rec = editId ? (rows.find(r => r.id === editId) || {}) : (sf ? { [sf.key]: sf.options[0] } : {});
+    const rec = editId ? (rows.find(r => r.id === editId) || {})
+      : m.key === "goods" ? { category: "公共" } // 物资默认「公共＝家庭共用」，细类立即带出预设
+      : (sf ? { [sf.key]: sf.options[0] } : {});
     const quickOnly = (m.key === "finance" || m.key === "study" || m.key === "sport" || m.key === "todo");
     const showForm = !m.readOnly && (!quickOnly || !!editId);
     const showQuick = !m.readOnly && (!quickOnly || !editId);
@@ -1348,6 +1624,19 @@ window.SEED = {
         <div class="section-tools">${rulesBtn}</div></div>
       ${quick}${form}${display}${datalists()}`;
 
+    // 完整表单：分类候选也随「支出/收入」切换，避免收支类型与分类不匹配
+    if (m.key === "finance") {
+      updateCatDatalist();
+      const typeSel = $("#rec-form select[name='type']");
+      if (typeSel) typeSel.onchange = () => {
+        updateCatDatalist();
+        const ci = $("#rec-form input[name='category']");
+        if (ci && ci.value && !tagScopeMatch(ci.value, typeSel.value)) {
+          ci.value = ""; toast("该分类不属于" + typeSel.value + "，请重新选择");
+        }
+      };
+    }
+
     if ($("#rec-form")) $("#rec-form").onsubmit = async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
@@ -1369,7 +1658,15 @@ window.SEED = {
         }
       });
       if (jobs.length) await Promise.all(jobs);
-      if (m.key === "goods" && !editId && !obj.image) { toast("新增物资请拍照/上传示例图"); return; }
+      // 带 tagKey 的自由输入字段（记账分类/学习方式/运动类型）：新文本自动沉淀为标签
+      m.fields.forEach(f => {
+        if (!f.tagKey || f.type === "select" || f.type === "image") return;
+        const val = String(obj[f.key] || "").trim();
+        if (val && val !== "其他" && allOf(f.tagKey).indexOf(val) < 0) {
+          addTag(f.tagKey, val);
+          if (f.tagKey === "finance_categories") setTagScope(val, obj.type === "收入" ? "income" : "expense");
+        }
+      });
       if (m.key === "purchase") {
         const goods = await window.DB.records("goods");
         const same = goods.find(g => g.name === obj.name);
@@ -1393,16 +1690,47 @@ window.SEED = {
       if (wasEdit && m.key === "goods") await autoPurchase(obj);
       render();
     };
-    // 物资：大类 → 细类 级联
+    // 物资：大类 → 细类 级联（均支持选「其他」新建标签）
     if (m.key === "goods") {
       const cat = $("#rec-form select[name='category']"), sub = $("#rec-form select[name='sub']");
       if (cat && sub) {
         const wantSub = rec.sub || "";
-        const fillSub = (keep) => { const opts = subsOf(cat.value); sub.innerHTML = `<option value="">请选择</option>` + opts.map(o => `<option value="${esc(o)}"${o === keep ? " selected" : ""}>${esc(o)}</option>`).join(""); };
+        const optsHtml = (opts, keep) => (cat.value ? `<option value="">请选择</option>` : `<option value="" disabled>请先选择大类</option>`) + optsWithOther(opts).map(o =>
+          `<option value="${esc(o)}"${o === keep ? " selected" : ""}>${o === "其他" ? "＋ 其他（自定义）" : esc(o)}</option>`).join("");
+        const fillSub = (keep) => { sub.innerHTML = optsHtml(subsOf(cat.value), keep); bindSub(); };
+        const bindSub = () => {
+          sub.onchange = () => {
+            if (sub.value !== "其他" || !cat.value) return;
+            openNewTag("goods_sub|" + cat.value, name => {
+              fillSub(name); toast("已添加细类「" + name + "」");
+            });
+          };
+        };
         fillSub(wantSub);
-        cat.onchange = () => fillSub(subsOf(cat.value).includes(sub.value) ? sub.value : "");
+        cat.onchange = () => {
+          if (cat.value === "其他") {
+            openNewTag("goods_categories", name => {
+              cat.innerHTML = optsHtml(allOf("goods_categories"), name);
+              fillSub(""); toast("已添加大类「" + name + "」");
+            });
+          } else fillSub(subsOf(cat.value).includes(sub.value) ? sub.value : "");
+        };
       }
     }
+    // 「＋ 新标签」按钮：弹窗输入 → 存为标签 → 回填到对应输入框
+    $$("#rec-form [data-addtag]").forEach(b => b.onclick = () => {
+      const key = b.dataset.addtag, target = b.dataset.target;
+      openNewTag(key, name => {
+        const inp = $(`#rec-form [name='${target}']`);
+        if (inp) inp.value = name;
+        if (key === "finance_categories") {
+          const ts = $("#rec-form select[name='type']");
+          setTagScope(name, ts && ts.value === "收入" ? "income" : "expense");
+          updateCatDatalist();
+        }
+        toast(tagSaveHint("已添加并填入「" + name + "」"));
+      });
+    });
     const cancel = $("#cancel-edit"); if (cancel) cancel.onclick = () => { editId = null; render(); };
     const bb = $("#btn-back"); if (bb) bb.onclick = () => { active = "home"; editId = null; render(); };
     if (showQuick) bindQuick(m, rows);
@@ -1617,9 +1945,13 @@ window.SEED = {
         <div class="page-sub">时间类图表可按月切换（近 12 个月）；库存/临期为当前态</div></div>
         <div class="section-tools">${monthSel}</div></div>
       ${stats}
-      <div class="charts" style="margin-top:16px">${chartCards}</div>`;
+      <div class="charts" style="margin-top:16px">${chartCards}</div>
+      <div class="card" style="margin-top:16px"><h3>标签管理</h3>
+        <div class="rule-tip">管理记账分类、学习/运动方式、物资大类与细类的自定义选项。记账分类可标「支出 / 收入 / 通用」：收入标签只在收入页显示。点击标签上的小徽章可切换用途（支出 → 收入 → 通用）。新增的标签会排在最前面，点「完成并刷新页面」后立即在功能页生效。删除只从候选中移除，已有记录保持不变。</div>
+        <div class="section-tools"><button class="btn" id="btn-tags" type="button">管理标签</button></div></div>`;
 
     $("#report-month").onchange = e => { window.__reportMonth = e.target.value; renderReportCenter(); };
+    const bt = $("#btn-tags"); if (bt) bt.onclick = () => openTagsModal(() => render());
     const bb = $("#btn-back"); if (bb) bb.onclick = () => { active = "home"; render(); };
     C.charts.forEach(c => {
       const el = $(`[data-chart="${c.id}"]`); if (!el) return;
@@ -1735,11 +2067,23 @@ window.SEED = {
       const lines = [`# 人生不过三万天 · ${Y} 年度总结`, ``, `总分：${avg} / 100`, ``, `## 五维画像`];
       dims.forEach(d => lines.push(`- ${d.label}（${d.score}）：${d.detail}`));
       lines.push(``, `## 次年建议`); advice.forEach(a => lines.push(`- ${a}`));
-      const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a"); a.href = url; a.download = `人生不过三万天-${Y}-年度总结.md`;
-      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1500);
-      toast("已导出年度总结");
+      const text = lines.join("\n");
+      const mask = document.createElement("div");
+      mask.className = "modal-mask";
+      mask.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="年度总结" style="max-width:560px">
+        <div class="modal-hd"><h3>${Y} 年度总结</h3><button class="modal-x" data-x type="button" aria-label="关闭">×</button></div>
+        <div class="modal-bd"><div class="rule-tip">已生成年度总结。点「一键复制」后粘贴到备忘录或微信保存即可，App 内不会闪退。</div>
+          <textarea class="bk-text" id="yr-out" readonly spellcheck="false">${esc(text)}</textarea></div>
+        <div class="modal-ft"><button class="btn" id="yr-copy" type="button">一键复制</button><button class="btn ghost" data-x type="button">关闭</button></div>
+      </div>`;
+      document.body.appendChild(mask);
+      const close = () => mask.remove();
+      mask.querySelectorAll("[data-x]").forEach(b => b.onclick = close);
+      mask.onclick = e => { if (e.target === mask) close(); };
+      $("#yr-copy").onclick = async () => {
+        const ok = await copyToClipboard(text);
+        toast(ok ? "已复制，去备忘录/微信粘贴保存" : "复制失败：请长按下方文字全选后手动复制");
+      };
     };
   }
 
@@ -1776,32 +2120,105 @@ window.SEED = {
   }
 
   // ---------- 数据导出/导入（跨设备同步）----------
+  // 复制文本到剪贴板：优先用现代 API，失败则回退到 textarea + execCommand（兼容 App 内置浏览器）
+  function copyToClipboard(text) {
+    return new Promise(resolve => {
+      const fallback = () => {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text; ta.setAttribute("readonly", "");
+          ta.style.cssText = "position:fixed;left:0;top:0;opacity:0;font-size:16px";
+          document.body.appendChild(ta);
+          ta.select(); ta.setSelectionRange(0, text.length);
+          const ok = document.execCommand("copy");
+          ta.remove();
+          resolve(ok);
+        } catch (e) { resolve(false); }
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => resolve(true)).catch(fallback);
+      } else fallback();
+    });
+  }
+  // 解析并写入备份：文件导入与粘贴导入共用
+  async function applyImport(txt) {
+    if (!txt || !txt.trim()) { toast("备份内容为空"); return; }
+    let rules = null, tags = null, scopes = null;
+    try {
+      const obj = JSON.parse(txt);
+      if (obj.rules && typeof obj.rules === "object") rules = obj.rules;
+      if (obj.tags && typeof obj.tags === "object") tags = obj.tags;
+      if (obj.tagScopes && typeof obj.tagScopes === "object") scopes = obj.tagScopes;
+    } catch (e) {}
+    try {
+      await window.DB.importAll(txt);
+      if (rules) saveRules(rules);
+      if (tags) saveTags(tags);
+      if (scopes) saveScopes(scopes);
+      toast(rules || tags || scopes ? "导入成功（含规则/标签）" : "导入成功"); render();
+    } catch (e) { toast("导入失败：" + (e.message || "格式不正确")); }
+  }
   function setupBackup() {
+    // 导出：不再触发 App 内置浏览器不支持的文件下载（那是闪退根因），改为弹窗展示文本供复制
     $("#btn-export").onclick = async () => {
       try {
         const obj = JSON.parse(await window.DB.exportAll());
         obj.rules = loadRules(); // 补货规则随备份一起带走
-        const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = "人生不过三万天-备份-" + todayStr() + ".json";
-        document.body.appendChild(a); a.click(); a.remove();
-        setTimeout(() => URL.revokeObjectURL(url), 1500);
-        toast("已导出备份，可在另一台设备导入");
+        obj.tags = loadTags();       // 自定义标签随备份一起带走
+        obj.tagScopes = loadScopes(); // 记账分类的支出/收入用途随备份一起带走
+        const text = JSON.stringify(obj, null, 2);
+        const mask = document.createElement("div");
+        mask.className = "modal-mask";
+        mask.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="导出备份" style="max-width:560px">
+          <div class="modal-hd"><h3>备份数据</h3><button class="modal-x" data-x type="button" aria-label="关闭">×</button></div>
+          <div class="modal-bd">
+            <div class="rule-tip">点「复制全部备份」保存完整数据；换设备只想恢复标签/规则时，点「仅复制标签/规则」，内容更短、复制更稳。粘贴到微信收藏、备忘录或文件传输助手保存。此方式在 App 内最稳定，不会闪退。</div>
+            <textarea class="bk-text" id="bk-out" readonly spellcheck="false">${esc(text)}</textarea>
+          </div>
+          <div class="modal-ft" style="gap:6px;flex-wrap:wrap"><button class="btn" id="bk-copy" type="button" style="flex:1.15;white-space:nowrap">复制全部备份</button><button class="btn ghost" id="bk-lite" type="button" style="flex:1.25;white-space:nowrap">仅复制标签/规则</button><button class="btn ghost" data-x type="button" style="flex:0.6;white-space:nowrap">关闭</button></div>
+        </div>`;
+        document.body.appendChild(mask);
+        const close = () => mask.remove();
+        mask.querySelectorAll("[data-x]").forEach(b => b.onclick = close);
+        mask.onclick = e => { if (e.target === mask) close(); };
+        const lite = JSON.stringify({ v: obj.v, tags: obj.tags, tagScopes: obj.tagScopes, rules: obj.rules }, null, 2);
+        const out = $("#bk-out");
+        $("#bk-copy").onclick = async () => {
+          out.value = text;
+          const ok = await copyToClipboard(text);
+          toast(ok ? "已复制全部备份，去微信/备忘录粘贴保存" : "复制失败：请长按下方文字全选后手动复制");
+        };
+        $("#bk-lite").onclick = async () => {
+          out.value = lite;
+          const ok = await copyToClipboard(lite);
+          toast(ok ? "已复制轻量备份（仅标签/规则），去微信/备忘录粘贴保存" : "已显示在下方，请长按全选后手动复制");
+        };
       } catch (e) { toast("导出失败：" + e.message); }
     };
+    // 导入：两种通道——粘贴文本（App 内推荐）+ 选择文件（电脑浏览器）
     const fi = $("#file-import");
-    $("#btn-import").onclick = () => fi.click();
+    $("#btn-import").onclick = () => {
+      const mask = document.createElement("div");
+      mask.className = "modal-mask";
+      mask.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="导入备份" style="max-width:560px">
+        <div class="modal-hd"><h3>导入备份</h3><button class="modal-x" data-x type="button" aria-label="关闭">×</button></div>
+        <div class="modal-bd">
+          <div class="rule-tip">把之前复制的备份内容长按粘贴到下面，点「开始导入」。导入是合并，不会删除现有记录。若在电脑上，也可选择 JSON 备份文件。</div>
+          <textarea class="bk-text" id="bk-in" placeholder="在此长按粘贴备份内容…" spellcheck="false"></textarea>
+          <button class="txt-link" id="bk-file" type="button">或点此选择 JSON 文件</button>
+        </div>
+        <div class="modal-ft"><button class="btn" id="bk-ok" type="button">开始导入</button><button class="btn ghost" data-x type="button">关闭</button></div>
+      </div>`;
+      document.body.appendChild(mask);
+      const close = () => mask.remove();
+      mask.querySelectorAll("[data-x]").forEach(b => b.onclick = close);
+      mask.onclick = e => { if (e.target === mask) close(); };
+      $("#bk-ok").onclick = async () => { const v = $("#bk-in").value; if (!v.trim()) { toast("请先粘贴备份内容"); return; } await applyImport(v); close(); };
+      $("#bk-file").onclick = () => fi.click();
+    };
     fi.onchange = async () => {
       const file = fi.files && fi.files[0]; if (!file) return;
-      try {
-        const txt = await file.text();
-        let rules = null;
-        try { const obj = JSON.parse(txt); if (obj.rules && typeof obj.rules === "object") rules = obj.rules; } catch (e) {}
-        await window.DB.importAll(txt);
-        if (rules) saveRules(rules);
-        toast(rules ? "导入成功（含补货规则）" : "导入成功"); render();
-      } catch (e) { toast("导入失败：" + e.message); }
+      try { const txt = await file.text(); await applyImport(txt); } catch (e) { toast("读取文件失败：" + e.message); }
       fi.value = "";
     };
   }
