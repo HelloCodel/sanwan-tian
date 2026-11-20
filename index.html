@@ -277,6 +277,8 @@ svg.chart{width:100%;height:210px;display:block}
   .kpi .v{font-size:15px}
   .form .field{flex:1 1 100%}
   .field input,.field select,.field textarea,.status-select{width:100%;min-width:0;font-size:16px;padding:12px}
+  /* 表格内的状态下拉：固定最小宽度，避免被表格列挤成一条只剩箭头（待办/已办/请购通用） */
+  .table-wrap .status-select{width:auto;min-width:76px;padding:6px 4px;font-size:13px}
   .btn{width:100%;padding:13px}
   .qadd .btn{width:auto;flex:0 0 auto;padding:12px 18px}
   .qadd input{min-width:0;flex:1 1 auto}
@@ -363,7 +365,7 @@ window.APP_CONFIG = {
       columns: ["category", "sub", "name", "qty", "threshold", "inDate", "expiry", "image", "location"]
     },
     {
-      key: "todo", label: "待办", icon: "todo", kind: "record", statusField: "status",
+      key: "todo", label: "待办", icon: "todo", kind: "record", statusField: "status", pendingFilter: true,
       fields: [
         { key: "title", label: "事项", type: "textarea", required: true },
         { key: "status", label: "状态", type: "select", options: ["待办", "已完成"], required: true },
